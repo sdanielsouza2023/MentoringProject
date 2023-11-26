@@ -21,7 +21,7 @@ const uploadImagemCosmic = async (req: any) => {
       !req.file.originalname.includes(".jpg") &&
       !req.file.originalname.includes(".jpeg")
     ) {
-      throw new Error("Extensao da imagem invalida")
+      throw new Error("extensão de imagem inválida")
     }
     const media_object = {
       originalname: req.file.originalname,
