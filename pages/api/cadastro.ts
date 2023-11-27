@@ -55,6 +55,5 @@ export const config = {
     bodyParser: false,
   }
 }
-console.log(conectarMongoDB(handler)
-)
+
 export default conectarMongoDB(handler)
