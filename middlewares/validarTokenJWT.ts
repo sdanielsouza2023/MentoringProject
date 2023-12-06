@@ -27,7 +27,7 @@ export const validarTokenJwt = (handler: NextApiHandler) => (req: NextApiRequest
       if (!req.query) {
         req.query = {}
       }
-      req.query.userId = decoded._id // e aqui q sai o id do usario logado ???
+      req.query.userId = decoded._id // e aqui q sai o id do usario logado ? Sim
     }
   } catch (e) {
     console.log(e)

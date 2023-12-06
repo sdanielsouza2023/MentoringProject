@@ -26,9 +26,8 @@ const PesquisaProdutosEndpoint = async (req: NextApiRequest, res: NextApiRespons
             { descricao: { $regex: filtro, $options: 'i' } }
           ]
         },
-        { comentarios: 1, _id: 0 } // Projeção para incluir apenas o campo de comentários
-      );
-
+        //  { comentarios: 1, _id: 0 } // Projeção para incluir apenas o campo de comentários
+      )
 
       return res.status(200).json(produtoEncontrados)
     }
