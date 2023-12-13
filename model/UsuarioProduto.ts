@@ -7,7 +7,12 @@ const produtosSchema = new Schema({
   foto: { type: String, required: true },
   data: { type: Date, required: true },
 
-  comentarios: { type: Array, required: true, default: [] },
+  comentarios: [
+    {
+      texto: { type: String, required: false },
+      likes: { type: Array, required: false, default: [] },
+    },
+  ],
   likes: { type: Array, required: true, default: [] },
 
 })

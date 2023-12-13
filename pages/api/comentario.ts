@@ -10,6 +10,9 @@ const comentarioEndPoint = async (req: NextApiRequest, res: NextApiResponse<Resp
   try {
     if (req.method === 'PUT') {
       const { userId, id } = req.query
+      console.log(userId, 'userId')
+      console.log(req.query, ':req.query')
+      console.log(req.body, 'Corpo')
       const usuarioLogado = await UsuarioModel.findById(userId)
       if (!usuarioLogado) {
         return res.status(400).json({ erro: 'Usuário não encontrado' })
@@ -18,16 +21,27 @@ const comentarioEndPoint = async (req: NextApiRequest, res: NextApiResponse<Resp
       if (!produto) {
         return res.status(400).json({ erro: 'Publicação do maquinário não encontrado' })
       }
+      console.log('req.body:', req.body);
+      console.log('req.body.comentarios.texto:', req.body.comentarios.texto);
+      console.log('------------------------------')
+      console.log(req.body, 'req.body')
+      console.log('------------------------------')
+      if (req.body.comentarios.texto) {
+        console.log("Vazio")
+      }
+      console.log('req.body:', req.body);
+      console.log('req.body.comentarios:', req.body.comentarios);
+      console.log('req.body.comentarios.texto:', req.body.comentarios.texto);
 
-      if (!req.body || !req.body.comentarios
-        || req.body.comentarios.length < 2) {
-        return res.status(400).json({ erro: 'O comentário não é válido' })
+      if (!req.body || !req.body.comentarios || !req.body.comentarios || req.body.comentarios.length < 2) {
+        return res.status(400).json({ erro: 'O comentário não é válido' });
       }
 
       const comentarios = {
         usuarioId: usuarioLogado._id,
         nome: usuarioLogado.nome,
-        comentarios: req.body.comentarios
+        texto: req.body.comentarios,
+        likes: [],
       }
       produto.comentarios.push(comentarios)
       await produtosModel.findByIdAndUpdate({ _id: produto._id }, produto)
