@@ -7,6 +7,7 @@ import { conectarMongoDB } from '../../middlewares/conectarBanco'
 import { validarTokenJwt } from '../../middlewares/validarTokenJWT'
 import { produtosModel } from '../../model/UsuarioProduto'
 import { UsuarioModel } from "../../model/UsuarioModel";
+import { NextRequest } from "next/server";
 
 
 const handler = nc()
@@ -59,6 +60,16 @@ const handler = nc()
     } catch (error) {
       return res.status(400).json({
         erro: "Erro ao enviar sua pergunta"
+      })
+    }
+  })
+  .get(async (req: NextApiResponse, res: NextApiResponse) => {
+    try {
+      const produto = await produtosModel.find().sort({ data: -1 })
+      return res.status(200).json(produto)
+    } catch (e) {
+      return res.status(400).json({
+        erro: "Erro ao obter produtos por data"
       })
     }
   })

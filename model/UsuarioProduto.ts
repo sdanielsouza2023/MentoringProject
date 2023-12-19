@@ -9,11 +9,11 @@ const produtosSchema = new Schema({
 
   comentarios: [
     {
-      texto: { type: String, required: false },
-      likes: { type: Array, required: false, default: [] },
+      texto: { type: String, required: true },
+      likes: { type: Array, required: true, default: [] },
     },
   ],
-  likes: { type: Array, required: true, default: [] },
+  //likes: { type: Array, required: true, default: [] },
 
 })
 //mongoose.models.produtos se existir salva os dados
