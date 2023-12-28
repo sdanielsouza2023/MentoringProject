@@ -2,30 +2,40 @@ import type { NextApiRequest, NextApiResponse } from "next"
 import type { RespostaPadraoMsg } from "../../types/respostaPadao"
 import { validarTokenJwt } from "../../middlewares/validarTokenJWT"
 import { conectarMongoDB } from "../../middlewares/conectarBanco"
-import { produtosModel } from '../../model/UsuarioProduto'
+import { produtosModel } from '../../model/ProduitoModel'
 import { UsuarioModel } from "../../model/UsuarioModel"
+import comentario from "./comentario"
 const likeEndPoint = async (req: NextApiRequest, res: NextApiResponse<RespostaPadraoMsg>) => {
   try {
     if (req.method === 'PUT') {
-      //const { id } = req?.query
-      const { id } = req?.query
-      const publicacao = await produtosModel.findById(id)
-      if (!publicacao) {
+      //const { id } = req?.queryconst { userId } = req?.query
+      const { idProduto, idComentario ,  userId} = req?.query
+     console.log(idProduto)
+     console.log(idComentario)
+
+      const produto = await produtosModel.findById(idProduto)
+      if (!produto) {
         res.status(400).json({ erro: 'publicação não encontrada' })
       }
-      const { userId } = req?.query
+      
       const usuario = await UsuarioModel.findById(userId)
-      const likesDosComentariosIndexUsuario = publicacao.comentarios.map((comentario) =>
-        comentario.likes.findIndex((e: any) => e.toString() === usuario._id.toString()))
-      console.log('likesDosComentariosIndexUsuario', likesDosComentariosIndexUsuario)
-      if (likesDosComentariosIndexUsuario != -1) {
-        publicacao.comentarios.map((comentario: any) => comentario.likes.splice(likesDosComentariosIndexUsuario, 1))
-        await produtosModel.findByIdAndUpdate({ _id: publicacao._id }, publicacao)
-        return res.status(200).json({ msg: 'dislike no comentário com sucesso' })
+      const comentarioAserCurtido = produto.comentarios.filter(comentario => comentario._id == idComentario)[0] 
+      if(!comentarioAserCurtido){
+        res.status(400).json({ erro: 'Comentario não encontrado' })
+      }
+      const comentarioAserCurtidoIndex = produto.comentarios.findIndex(comentario => comentario == comentarioAserCurtido)
+      const likesDosComentariosIndexUsuario = comentarioAserCurtido.likes.findIndex(like => like == userId)
+  
+      if (likesDosComentariosIndexUsuario == -1) {
+        produto.comentarios[comentarioAserCurtidoIndex].likes.push(usuario._id)
+        await produtosModel.findByIdAndUpdate({ _id: produto._id }, produto)
+        return res.status(200).json({ msg: 'Comentário curtido com sucesso'})       
       } else {
-        publicacao.comentarios.map((comentario: any) => comentario.likes.push(usuario._id))
-        await produtosModel.findByIdAndUpdate({ _id: publicacao._id }, publicacao)
-        return res.status(200).json({ msg: 'Comentário curtido com sucesso' })
+        produto.comentarios[comentarioAserCurtidoIndex].likes.splice(likesDosComentariosIndexUsuario, 1)
+        await produtosModel.findByIdAndUpdate({ _id: produto._id }, produto)
+
+        console.log('likesDosComentariosIndexUsuario', likesDosComentariosIndexUsuario)
+        return res.status(200).json({ msg: 'dislike no comentário com sucesso' })
       }
     }
     return res.status(405).json({ erro: 'Método informado não é válido' })

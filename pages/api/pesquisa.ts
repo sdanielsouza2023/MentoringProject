@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next"
 import type { RespostaPadraoMsg } from '../../types/respostaPadao'
 import { validarTokenJwt } from '../../middlewares/validarTokenJWT'
 import { conectarMongoDB } from "../../middlewares/conectarBanco"
-import { produtosModel } from "../../model/UsuarioProduto"
+import { produtosModel } from "../../model/ProduitoModel"
 
 
 const PesquisaProdutosEndpoint = async (req: NextApiRequest, res: NextApiResponse<RespostaPadraoMsg | any[]>) => {
@@ -22,7 +22,7 @@ const PesquisaProdutosEndpoint = async (req: NextApiRequest, res: NextApiRespons
       const produtoEncontrados = await produtosModel.find(
         {
           $or: [
-            { nome: { $regex: filtro, $options: 'i' } },
+            { nome: { $regex: filtro, $options: 'i' }},
             { descricao: { $regex: filtro, $options: 'i' } }
           ]
         },

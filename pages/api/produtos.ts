@@ -5,9 +5,9 @@ import nc from 'next-connect'
 import { upload, uploadImagemCosmic } from '../../services/uploadImagens'
 import { conectarMongoDB } from '../../middlewares/conectarBanco'
 import { validarTokenJwt } from '../../middlewares/validarTokenJWT'
-import { produtosModel } from '../../model/UsuarioProduto'
+import { produtosModel } from '../../model/ProduitoModel'
 import { UsuarioModel } from "../../model/UsuarioModel";
-import { NextRequest } from "next/server";
+
 
 
 const handler = nc()
@@ -55,7 +55,7 @@ const handler = nc()
         data: new Date()
       }
       await produtosModel.create(produtos)
-      return res.status(400).json({ msg: 'publicação é criada com sucesso :) ' })
+      return res.status(400).json({ msg: 'publicação foi criada com sucesso :) ' })
 
     } catch (error) {
       return res.status(400).json({
